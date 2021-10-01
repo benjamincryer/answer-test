@@ -13,7 +13,14 @@ export class ColourNamesValueConverter {
     //
     // Example: 'Blue, Green, Red'
 
-    return 'Todo';
+      //Put in array, then sort it
+      let colourNames = [];
+      for (var i = 0; i < colours.length; i++) {
+          colourNames.push(colours[i].name);
+      }
+
+      return colourNames.sort().join();
+
   }
 
 }

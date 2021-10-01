@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using TechTest.Repositories;
 using TechTest.Repositories.Models;
 
@@ -26,7 +29,8 @@ namespace TechTest.Controllers
             // people returned from PeopleRepository then an empty
             // JSON array should be returned.
 
-            throw new NotImplementedException();
+            IEnumerable<Person> people = PersonRepository.GetAll();
+            return Ok(people);
         }
 
         [HttpGet("{id}")]
@@ -39,7 +43,17 @@ namespace TechTest.Controllers
             // If null is returned from the PeopleRepository with
             // the supplied id then a NotFound should be returned.
 
-            throw new NotImplementedException();
+            Person person = PersonRepository.Get(id);
+
+            if (person == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return Ok(person);
+            }
+
         }
 
         [HttpPut("{id}")]
@@ -54,7 +68,22 @@ namespace TechTest.Controllers
             // If null is returned from the PeopleRepository then a
             // NotFound should be returned.
 
-            throw new NotImplementedException();
+            Person person = PersonRepository.Get(id);
+
+            if (person == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                person.Authorised = personUpdate.Authorised;
+                person.Enabled = personUpdate.Enabled;
+                person.Colours = personUpdate.Colours;
+
+                PersonRepository.Update(person);
+
+                return Ok(person);
+            }
         }
     }
 }
