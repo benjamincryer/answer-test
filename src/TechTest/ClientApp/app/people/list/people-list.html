@@ -22,9 +22,9 @@
 
       <tr repeat.for="person of people" person.bind="person">
         <td><a class="is-link" href="/people/${person.id}">${person.fullName}</a></td>
-        <td>${person.palindrome ? 'Yes' : 'No'}</td>
-        <td>${person.authorised ? 'Yes' : 'No'}</td>
-        <td>${person.enabled ? 'Yes' : 'No'}</td>
+        <td style="color: ${person.palindrome ? 'green' : 'red'}">${person.palindrome ? 'Yes' : 'No'}</td>
+        <td style="color: ${person.authorised ? 'green' : 'red'}">${person.authorised ? 'Yes' : 'No'}</td>
+        <td style="color: ${person.enabled ? 'green' : 'red'}">${person.enabled ? 'Yes' : 'No'}</td>
         <td>${person.colours | colourNames }</td>
       </tr>
     </tbody>

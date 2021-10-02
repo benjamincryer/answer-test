@@ -44,7 +44,32 @@ export class PersonEdit {
     // this.person object. If the response is successful then
     // the user should be navigated to the list page.
 
-    throw new Error('Not Implemented');
+    try {
+        const params = {
+            id: this.person.id,
+            personUpdate: {
+                Authorised: this.person.authorised,
+                Enabled: this.person.enabled,
+                Colours: this.person.colours
+            }
+        };
+
+        const options = {
+            method: 'PUT',
+            body: JSON.stringify(params)
+        };
+
+        const response = await this.http.fetch('/people/', options);
+
+        const data = await response.json();
+        console.log(data);
+
+    } catch (error) {
+        console.log("Error: ", error);
+        throw error;
+    }
+      
+
   }
 
   cancel() {
