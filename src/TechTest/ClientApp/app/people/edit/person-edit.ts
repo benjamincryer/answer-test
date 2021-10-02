@@ -44,14 +44,12 @@ export class PersonEdit {
     // this.person object. If the response is successful then
     // the user should be navigated to the list page.
 
-    try {
+      try {
+        //Pass the attributes for the personUpdate object via JSON parameters
         const params = {
-            id: this.person.id,
-            personUpdate: {
-                Authorised: this.person.authorised,
-                Enabled: this.person.enabled,
-                Colours: this.person.colours
-            }
+            "Authorised": this.person.authorised,
+            "Enabled": this.person.enabled,
+            "Colours": this.person.colours
         };
 
         const options = {
@@ -59,17 +57,24 @@ export class PersonEdit {
             body: JSON.stringify(params)
         };
 
-        const response = await this.http.fetch('/people/', options);
+        console.log(JSON.stringify(params));
+
+        const response = await this.http.fetch(`/people/${this.person.id}`, options);
 
         const data = await response.json();
         console.log(data);
 
+        this.cancel(); //On success: navigate to the list page
+
     } catch (error) {
-        console.log("Error: ", error);
+        console.log("Error: ", error); //On failure: print an error
         throw error;
     }
-      
 
+
+      /* There's a problem where the colour checkboxes in the update form aren't initalized correctly.
+       * The HTML seem to be set up the same way as shown in the aurelia docs, but none of the checkboxes are ever checked on page load
+       * */
   }
 
   cancel() {

@@ -19,7 +19,7 @@ export class ColourNamesValueConverter {
           colourNames.push(colours[i].name);
       }
 
-      return colourNames.sort().join();
+      return colourNames.sort().join(', ');
 
   }
 

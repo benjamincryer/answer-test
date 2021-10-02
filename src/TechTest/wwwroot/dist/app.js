@@ -59,7 +59,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "aa8ead72d63c22b50553"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "ff9a5aacf8bc3acbfca6"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
@@ -4043,16 +4043,17 @@ class Person {
         // spaces and should also be case insensitive.
         //
         // Example: 'Bo Bob' is a palindrome.
-        let name = this.fullName.toLowerCase().replace(' ', ''); //Remove upper-case and spaces
-        let length = name.length;
-        //Step from the start+end of the name towards the middle and compare - if any pairs don't match, it's not a palindrome
+        const name = this.fullName.toLowerCase().replace(' ', ''); //Remove upper-case and spaces
+        const length = name.length;
+        //Move from the start+end of the string towards the middle, and compare at each step
         for (let i = 0; i < length / 2; i++) {
             if (name[i] != name[length - 1 - i]) {
                 return false;
             }
         }
+        //If no mismatches were found, it is a palindrome
         return true;
-        //Alternative: just compare the list to the reversed list. More concise, less efficient
+        //Alternative: just compare the list to the reversed list. More concise, but less efficient
         //return name == name.split('').reverse().join('');
     }
 }
@@ -21356,30 +21357,30 @@ let PersonEdit = class PersonEdit {
         // Send a JSON request to the API with the newly updated
         // this.person object. If the response is successful then
         // the user should be navigated to the list page.
-        let params = {
-            id: this.person.id,
-            personUpdate: {
-                Authorised: this.person.authorised,
-                Enabled: this.person.enabled,
-                Colours: this.person.colours
-            }
-        };
-        console.log(JSON.stringify(params));
-        this.http.fetch('/people/', {
-            method: 'PUT',
-            body: JSON.stringify(params)
-        })
-            .then(response => response.json())
-            .then(data => {
+        try {
+            //Pass the attributes for the personUpdate object via JSON parameters
+            const params = {
+                "Authorised": this.person.authorised,
+                "Enabled": this.person.enabled,
+                "Colours": this.person.colours
+            };
+            const options = {
+                method: 'PUT',
+                body: JSON.stringify(params)
+            };
+            console.log(JSON.stringify(params));
+            const response = await this.http.fetch(`/people/${this.person.id}`, options);
+            const data = await response.json();
             console.log(data);
-        });
-        /*
-      try {
-          
-  
-      } catch (error) {
-          throw error;
-      }*/
+            this.cancel(); //On success: navigate to the list page
+        }
+        catch (error) {
+            console.log("Error: ", error); //On failure: print an error
+            throw error;
+        }
+        /* There's a problem where the colour checkboxes in the update form aren't initalized correctly.
+         * The HTML seem to be set up the same way as shown in the aurelia docs, but none of the checkboxes are ever checked on page load
+         * */
     }
     cancel() {
         this.router.navigate('people');
@@ -21397,7 +21398,7 @@ PersonEdit = __decorate([
 /***/ "app/people/edit/person-edit.html":
 /***/ (function(module, exports) {
 
-module.exports = "<template>\n  <h2 class=\"title\">${heading}</h2>\n\n  <form role=\"form\" submit.delegate=\"submit()\">\n\n    <fieldset class=\"box\">\n      <legend>User Details</legend>\n      <div class=\"field\">\n\n        <div class=\"control\">\n          <label class=\"checkbox\">\n            <input type=\"checkbox\" checked.bind=\"person.authorised\" name=\"authorised\" /> Authorised\n          </label>\n        </div>\n\n        <div class=\"control\">\n          <label class=\"checkbox\">\n            <input type=\"checkbox\" checked.bind=\"person.enabled\" name=\"enabled\" /> Enabled\n          </label>\n        </div>\n\n      </div>\n    </fieldset>\n\n    <fieldset class=\"box\">\n      <legend>Favourate Colours</legend>\n      <div class=\"field\">\n\n        <div class=\"control\" repeat.for=\"colour of colourOptions\">\n          <label class=\"checkbox\">\n            <input type=\"checkbox\" model.bind=\"colour\" checked.bind=\"person.colours\" matcher.bind=\"colourMatcher\" name=\"colours\"\n            /> ${colour.name}\n          </label>\n        </div>\n\n      </div>\n\n    </fieldset>\n\n    <div class=\"field is-grouped\">\n\n      <div class=\"control\">\n        <input class=\"button is-link\" type=\"submit\" value=\"Save Changes\" />\n      </div>\n\n      <div class=\"control\">\n        <button class=\"button is-light\" click.delegate=\"cancel()\">Cancel</button>\n      </div>\n\n    </div>\n\n  </form>\n</template>\n";
+module.exports = "<template>\n  <h2 class=\"title\">${heading}</h2>\n\n  <form role=\"form\" submit.delegate=\"submit()\">\n\n    <fieldset class=\"box\">\n      <legend>User Details</legend>\n      <div class=\"field\">\n\n        <div class=\"control\">\n          <label class=\"checkbox\">\n            <input type=\"checkbox\" checked.bind=\"person.authorised\" name=\"authorised\" /> Authorised\n          </label>\n        </div>\n\n        <div class=\"control\">\n          <label class=\"checkbox\">\n            <input type=\"checkbox\" checked.bind=\"person.enabled\" name=\"enabled\" /> Enabled\n          </label>\n        </div>\n\n      </div>\n    </fieldset>\n\n    <fieldset class=\"box\">\n      <legend>Favourate Colours</legend>\n      <div class=\"field\">\n\n        <div class=\"control\" repeat.for=\"colour of colourOptions\">\n          <label class=\"checkbox\">\n            <input type=\"checkbox\" model.bind=\"colour\" checked.bind=\"person.colours\" matcher.bind=\"colourMatcher\" name=\"colours\"\n            /> ${colour.name}\n          </label>\n        </div>\n\n        <ul>\n            <li repeat.for=\"colour of person.colours\">${colour.id} : ${colour.name}</li>\n        </ul>\n\n      </div>\n\n    </fieldset>\n\n    <div class=\"field is-grouped\">\n\n      <div class=\"control\">\n        <input class=\"button is-link\" type=\"submit\" value=\"Save Changes\" />\n      </div>\n\n      <div class=\"control\">\n        <button class=\"button is-light\" click.delegate=\"cancel()\">Cancel</button>\n      </div>\n\n    </div>\n\n  </form>\n</template>\n";
 
 /***/ }),
 
@@ -21474,7 +21475,7 @@ class ColourNamesValueConverter {
         for (var i = 0; i < colours.length; i++) {
             colourNames.push(colours[i].name);
         }
-        return colourNames.sort().join();
+        return colourNames.sort().join(', ');
     }
 }
 /* harmony export (immutable) */ __webpack_exports__["ColourNamesValueConverter"] = ColourNamesValueConverter;

@@ -37,19 +37,21 @@ export class Person implements IPerson {
     //
     // Example: 'Bo Bob' is a palindrome.
 
-      let name = this.fullName.toLowerCase().replace(' ', ''); //Remove upper-case and spaces
-      let length = name.length;
+      const name = this.fullName.toLowerCase().replace(' ',''); //Remove upper-case and spaces
+      const length = name.length;
 
-      //Step from the start+end of the name towards the middle and compare - if any pairs don't match, it's not a palindrome
-      for (let i = 0; i < length/2; i++) {
+      //Move from the start+end of the string towards the middle, and compare at each step
+      for (let i = 0; i < length / 2; i++) {
           if (name[i] != name[length - 1 - i]) {
               return false;
           }
       }
 
+      //If no mismatches were found, it is a palindrome
       return true;
 
-      //Alternative: just compare the list to the reversed list. More concise, less efficient
+
+      //Alternative: just compare the list to the reversed list. More concise, but less efficient
       //return name == name.split('').reverse().join('');
   }
 }
