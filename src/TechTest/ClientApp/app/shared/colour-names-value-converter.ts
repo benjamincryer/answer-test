@@ -13,14 +13,23 @@ export class ColourNamesValueConverter {
     //
     // Example: 'Blue, Green, Red'
 
-      //Put in array, then sort it
-      let colourNames = [];
-      for (var i = 0; i < colours.length; i++) {
-          colourNames.push(colours[i].name);
-      }
+      //Turns the list of IColour objects into a list of names, then sorts alphabetically and joins them by comma
+      return colours.map(c => c.name).sort().join(', ');
 
-      return colourNames.sort().join(', ');
 
-  }
+      /* My first attempt sorted using a custom function, but I realised I could just swap the order of functions and reduce it to one line of code
+       * return colours.sort(
+          (c1: IColour, c2: IColour) => {
+              const str1 = c1.name.toLowerCase();
+              const str2 = c2.name.toLowerCase();
+
+              if (str1 < str2) return -1;
+              if (str1 > str2) return 1;
+              return 0;
+          }
+         ).map(c => c.name).join(', ');
+      */
+
+    }
 
 }

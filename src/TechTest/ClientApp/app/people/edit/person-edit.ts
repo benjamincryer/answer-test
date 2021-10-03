@@ -45,7 +45,7 @@ export class PersonEdit {
     // the user should be navigated to the list page.
 
       try {
-        //Pass the attributes for the personUpdate object via JSON parameters
+        //Pass the properties for the personUpdate object via JSON parameters
         const params = {
             "Authorised": this.person.authorised,
             "Enabled": this.person.enabled,
@@ -57,12 +57,8 @@ export class PersonEdit {
             body: JSON.stringify(params)
         };
 
-        console.log(JSON.stringify(params));
-
-        const response = await this.http.fetch(`/people/${this.person.id}`, options);
-
-        const data = await response.json();
-        console.log(data);
+        const updateResponse = await this.http.fetch(`/people/${this.person.id}`, options);
+        const data = await updateResponse.json();
 
         this.cancel(); //On success: navigate to the list page
 
@@ -72,8 +68,11 @@ export class PersonEdit {
     }
 
 
-      /* There's a problem where the colour checkboxes in the update form aren't initalized correctly.
-       * The HTML seem to be set up the same way as shown in the aurelia docs, but none of the checkboxes are ever checked on page load
+      /* There's a problem where the colour checkboxes in the update form aren't initalized correctly,
+       * meaning the PersonUpdate doesn't update colours as intended
+       * 
+       * I tested a few things, and it seems to be caused by an bug in aurelia where the matcher doesn't work inside a for loop
+       * I've changed the HTML accordingly, but left the old HTML in comments if you need to use the colourOptions
        * */
   }
 

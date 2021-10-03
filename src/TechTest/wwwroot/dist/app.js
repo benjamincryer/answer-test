@@ -59,7 +59,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "ff9a5aacf8bc3acbfca6"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "9114d9101a64cdf5c4a1"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
@@ -4047,12 +4047,10 @@ class Person {
         const length = name.length;
         //Move from the start+end of the string towards the middle, and compare at each step
         for (let i = 0; i < length / 2; i++) {
-            if (name[i] != name[length - 1 - i]) {
+            if (name[i] != name[length - 1 - i])
                 return false;
-            }
         }
-        //If no mismatches were found, it is a palindrome
-        return true;
+        return true; //If no mismatches were found, it is a palindrome
         //Alternative: just compare the list to the reversed list. More concise, but less efficient
         //return name == name.split('').reverse().join('');
     }
@@ -21368,18 +21366,19 @@ let PersonEdit = class PersonEdit {
                 method: 'PUT',
                 body: JSON.stringify(params)
             };
-            console.log(JSON.stringify(params));
-            const response = await this.http.fetch(`/people/${this.person.id}`, options);
-            const data = await response.json();
-            console.log(data);
+            const updateResponse = await this.http.fetch(`/people/${this.person.id}`, options);
+            const data = await updateResponse.json();
             this.cancel(); //On success: navigate to the list page
         }
         catch (error) {
             console.log("Error: ", error); //On failure: print an error
             throw error;
         }
-        /* There's a problem where the colour checkboxes in the update form aren't initalized correctly.
-         * The HTML seem to be set up the same way as shown in the aurelia docs, but none of the checkboxes are ever checked on page load
+        /* There's a problem where the colour checkboxes in the update form aren't initalized correctly,
+         * meaning the PersonUpdate doesn't update colours as intended
+         *
+         * I tested a few things, and it seems to be caused by an bug in aurelia where the matcher doesn't work inside a for loop
+         * I've changed the HTML accordingly, but left the old HTML in comments if you need to use the colourOptions
          * */
     }
     cancel() {
@@ -21398,7 +21397,7 @@ PersonEdit = __decorate([
 /***/ "app/people/edit/person-edit.html":
 /***/ (function(module, exports) {
 
-module.exports = "<template>\n  <h2 class=\"title\">${heading}</h2>\n\n  <form role=\"form\" submit.delegate=\"submit()\">\n\n    <fieldset class=\"box\">\n      <legend>User Details</legend>\n      <div class=\"field\">\n\n        <div class=\"control\">\n          <label class=\"checkbox\">\n            <input type=\"checkbox\" checked.bind=\"person.authorised\" name=\"authorised\" /> Authorised\n          </label>\n        </div>\n\n        <div class=\"control\">\n          <label class=\"checkbox\">\n            <input type=\"checkbox\" checked.bind=\"person.enabled\" name=\"enabled\" /> Enabled\n          </label>\n        </div>\n\n      </div>\n    </fieldset>\n\n    <fieldset class=\"box\">\n      <legend>Favourate Colours</legend>\n      <div class=\"field\">\n\n        <div class=\"control\" repeat.for=\"colour of colourOptions\">\n          <label class=\"checkbox\">\n            <input type=\"checkbox\" model.bind=\"colour\" checked.bind=\"person.colours\" matcher.bind=\"colourMatcher\" name=\"colours\"\n            /> ${colour.name}\n          </label>\n        </div>\n\n        <ul>\n            <li repeat.for=\"colour of person.colours\">${colour.id} : ${colour.name}</li>\n        </ul>\n\n      </div>\n\n    </fieldset>\n\n    <div class=\"field is-grouped\">\n\n      <div class=\"control\">\n        <input class=\"button is-link\" type=\"submit\" value=\"Save Changes\" />\n      </div>\n\n      <div class=\"control\">\n        <button class=\"button is-light\" click.delegate=\"cancel()\">Cancel</button>\n      </div>\n\n    </div>\n\n  </form>\n</template>\n";
+module.exports = "<template>\n  <h2 class=\"title\">${heading}</h2>\n\n  <form role=\"form\" submit.delegate=\"submit()\">\n\n    <fieldset class=\"box\">\n      <legend>User Details</legend>\n      <div class=\"field\">\n\n        <div class=\"control\">\n          <label class=\"checkbox\">\n            <input type=\"checkbox\" checked.bind=\"person.authorised\" name=\"authorised\" /> Authorised\n          </label>\n        </div>\n\n        <div class=\"control\">\n          <label class=\"checkbox\">\n            <input type=\"checkbox\" checked.bind=\"person.enabled\" name=\"enabled\" /> Enabled\n          </label>\n        </div>\n\n      </div>\n    </fieldset>\n\n    <fieldset class=\"box\">\n      <legend>Favourate Colours</legend>\n      <div class=\"field\">\n\n          <!--\n        <div class=\"control\" repeat.for=\"colour of colourOptions\">\n            <label class=\"checkbox\">\n                <input type=\"checkbox\" model.bind=\"colour\" checked.bind=\"person.colours\" matcher.bind=\"colourMatcher\" name=\"colours\" /> ${colour.name}\n            </label>\n        </div>\n        -->\n\n          <!-- I had to remove the for loop to make the update work as intended.\n              The model is now defined manually instead of using colourOptions from the repo, as I can't get the update behaving correctly otherwise-->\n\n          <div class=\"control\">\n              <label class=\"checkbox\">\n                  <input type=\"checkbox\" model.bind=\"{id:1,name:'Red'}\" checked.bind=\"person.colours\" matcher.bind=\"colourMatcher\" name=\"colours\" /> Red\n              </label>\n          </div>\n          <div class=\"control\">\n              <label class=\"checkbox\">\n                  <input type=\"checkbox\" model.bind=\"{id:2,name:'Green'}\" checked.bind=\"person.colours\" matcher.bind=\"colourMatcher\" name=\"colours\" /> Green\n              </label>\n          </div>\n          <div class=\"control\">\n              <label class=\"checkbox\">\n                  <input type=\"checkbox\" model.bind=\"{id:3,name:'Blue'}\" checked.bind=\"person.colours\" matcher.bind=\"colourMatcher\" name=\"colours\" /> Blue\n              </label>\n          </div>\n\n      </div>\n\n    </fieldset>\n\n    <div class=\"field is-grouped\">\n\n      <div class=\"control\">\n        <input class=\"button is-link\" type=\"submit\" value=\"Save Changes\" />\n      </div>\n\n      <div class=\"control\">\n        <button class=\"button is-light\" click.delegate=\"cancel()\">Cancel</button>\n      </div>\n\n    </div>\n\n  </form>\n</template>\n";
 
 /***/ }),
 
@@ -21470,12 +21469,24 @@ class ColourNamesValueConverter {
         // alphabetically and there should not be a trailing comma.
         //
         // Example: 'Blue, Green, Red'
-        //Put in array, then sort it
-        let colourNames = [];
-        for (var i = 0; i < colours.length; i++) {
-            colourNames.push(colours[i].name);
-        }
-        return colourNames.sort().join(', ');
+        //Turns the list of IColour objects into a list of names, then sorts alphabetically and joins them by comma
+        return colours.map(c => c.name).sort().join(', ');
+        /* My first attempt sorted using a custom function, but I realised I could just swap the order of functions and reduce it to one line of code
+         * return colours.sort(
+            (c1: IColour, c2: IColour) => {
+                const str1 = c1.name.toLowerCase();
+                const str2 = c2.name.toLowerCase();
+  
+                if (str1 < str2)
+                    return -1;
+  
+                if (str1 > str2)
+                    return 1;
+  
+                return 0;
+            }
+           ).map(c => c.name).join(', ');
+        */
     }
 }
 /* harmony export (immutable) */ __webpack_exports__["ColourNamesValueConverter"] = ColourNamesValueConverter;

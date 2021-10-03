@@ -26,16 +26,32 @@
       <legend>Favourate Colours</legend>
       <div class="field">
 
+          <!--
         <div class="control" repeat.for="colour of colourOptions">
-          <label class="checkbox">
-            <input type="checkbox" model.bind="colour" checked.bind="person.colours" matcher.bind="colourMatcher" name="colours"
-            /> ${colour.name}
-          </label>
+            <label class="checkbox">
+                <input type="checkbox" model.bind="colour" checked.bind="person.colours" matcher.bind="colourMatcher" name="colours" /> ${colour.name}
+            </label>
         </div>
+        -->
 
-        <ul>
-            <li repeat.for="colour of person.colours">${colour.id} : ${colour.name}</li>
-        </ul>
+          <!-- I had to remove the repeat.for loop to make the update work as intended (with the checkboxes properly bound to person.colours).
+              The model is now defined manually instead of using colourOptions from the repo -->
+
+          <div class="control">
+              <label class="checkbox">
+                  <input type="checkbox" model.bind="{id:1,name:'Red'}" checked.bind="person.colours" matcher.bind="colourMatcher" name="colours" /> Red
+              </label>
+          </div>
+          <div class="control">
+              <label class="checkbox">
+                  <input type="checkbox" model.bind="{id:2,name:'Green'}" checked.bind="person.colours" matcher.bind="colourMatcher" name="colours" /> Green
+              </label>
+          </div>
+          <div class="control">
+              <label class="checkbox">
+                  <input type="checkbox" model.bind="{id:3,name:'Blue'}" checked.bind="person.colours" matcher.bind="colourMatcher" name="colours" /> Blue
+              </label>
+          </div>
 
       </div>
 
