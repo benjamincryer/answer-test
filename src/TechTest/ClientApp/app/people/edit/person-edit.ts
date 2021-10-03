@@ -69,7 +69,7 @@ export class PersonEdit {
 
 
       /* There's a problem where the colour checkboxes in the update form aren't initalized correctly,
-       * meaning the PersonUpdate doesn't update colours as intended
+       * meaning the PersonUpdate doesn't update colours as expected
        * 
        * I tested a few things, and it seems to be caused by an bug in aurelia where the matcher doesn't work inside a for loop
        * I've changed the HTML accordingly, but left the old HTML in comments if you need to use the colourOptions
